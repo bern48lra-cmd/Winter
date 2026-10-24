@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stock Winter Floodlit League — Match Score Sheet</title>
@@ -24,7 +23,7 @@
   #scoreTable th { background:#eaf1f5; font-size:12px; }
   #scoreTable th.home-heading { width:220px; min-width:220px; }
   #scoreTable th.away-heading { min-width:210px; }
-  .pair-inputs { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+  .pair-inputs { display:grid; grid-template-columns:1fr; gap:5px; }
   .pair-inputs input { min-width:85px; font-size:12px; }
   .score-cell { min-width:210px; }
   .set-score { display:grid; grid-template-columns:repeat(2,minmax(76px,1fr)); gap:6px; }
@@ -47,22 +46,48 @@
   .save-status { font-size:12px; color:var(--muted); margin-top:7px; }
   .save-status::before { content:'●'; color:#15803d; margin-right:6px; }
   @media (max-width:700px) {
-    body { padding:0; background:#fff; }
-    .sheet { padding:15px 12px; border-radius:0; box-shadow:none; }
-    h1 { font-size:18px; }
-    .details, .signatures { grid-template-columns:1fr; gap:12px; }
-    .details { margin:17px 0; }
-    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    #scoreTable { min-width:1120px; }
-    .grid-help { line-height:1.5; }
-    .summary { justify-content:stretch; }
-    .totals { min-width:0; width:100%; }
-    .totals th, .totals td { padding:8px 5px; }
-    .totals .number { font-size:19px; }
-    .footer { align-items:stretch; }
-    .footer > div:first-child { font-size:13px; }
-    .buttons { display:grid; grid-template-columns:1fr; width:100%; }
-    button { width:100%; }
+    :root { --line:#cbd5e1; }
+    body { padding:0; background:#f8fafc; font-size:16px; }
+    .sheet { padding:16px 12px 24px; border-radius:0; box-shadow:none; }
+    header { text-align:left; margin-bottom:18px; }
+    h1 { font-size:19px; line-height:1.25; letter-spacing:.015em; }
+    .season { margin-top:9px; }
+    .season input { width:112px; min-height:42px; }
+    .details, .signatures { grid-template-columns:1fr; gap:14px; }
+    .details { margin:18px 0; }
+    label { font-size:12px; margin-bottom:6px; }
+    input, select, textarea { min-height:44px; padding:10px 11px; font-size:16px; }
+    .grid-help { background:#eaf4f7; border-radius:8px; padding:11px 12px; line-height:1.45; }
+    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:9px; box-shadow:0 1px 3px #0f172a0d; }
+    #scoreTable { min-width:650px; table-layout:fixed; }
+    #scoreTable th, #scoreTable td { padding:7px; }
+    #scoreTable th { font-size:12px; }
+    #scoreTable th.home-heading { width:145px; min-width:145px; }
+    #scoreTable th.away-heading { min-width:250px; }
+    .pair-inputs { grid-template-columns:1fr; gap:5px; }
+    .pair-inputs input { min-width:0; min-height:42px; padding:7px 5px; font-size:14px; }
+    .score-cell { min-width:250px; }
+    .set-score { grid-template-columns:repeat(2,minmax(95px,1fr)); gap:6px; }
+    .set-entry { gap:5px; }
+    .set-entry label { font-size:11px; }
+    .set-entry input { min-height:46px; padding:8px 3px; font-size:18px; }
+    .summary { display:block; margin:18px 0 22px; }
+    .totals { min-width:0; width:100%; background:white; border-collapse:separate; border-spacing:0; border-radius:9px; overflow:hidden; }
+    .totals th, .totals td { padding:11px 6px; }
+    .totals .number { font-size:23px; }
+    .reason { margin:22px 0; }
+    textarea { min-height:90px; }
+    .signatures { margin-top:22px; gap:14px; }
+    .footer { margin-top:24px; align-items:stretch; gap:18px; }
+    .footer > div:first-child { font-size:14px; line-height:1.6; overflow-wrap:anywhere; }
+    .buttons { display:grid; grid-template-columns:1fr; width:100%; gap:10px; }
+    button { width:100%; min-height:48px; padding:12px 14px; font-size:16px; }
+    .note { font-size:13px; line-height:1.5; }
+  }
+  @media (max-width:380px) {
+    .sheet { padding-left:9px; padding-right:9px; }
+    h1 { font-size:17px; }
+    #scoreTable { min-width:620px; }
   }
   @media print {
     @page { size:landscape; margin:8mm; }
@@ -90,37 +115,68 @@
     <div class="season">Season <input id="season" value="2026-27" aria-label="Season"></div>
   </header>
   <section class="details">
-    <div><label for="division">Division</label><input id="division" value="Mens/Ladies/Mix"></div>
-    <div><label for="matchDate">Date</label><input id="matchDate" type="date"></div>
-    <div><label for="homeTeam">Home team</label><input id="homeTeam" placeholder="Enter home team"></div>
-    <div><label for="awayTeam">Away team</label><input id="awayTeam" placeholder="Enter away team"></div>
+    <div><label for="division">Division</label><input id="division" value="Mens DIV 6"></div>
+    <div><label for="matchDate">Date</label><input id="matchDate" type="date" value="2026-10-24"></div>
+    <div><label for="homeTeam">Home team</label><input id="homeTeam" placeholder="Enter home team" value=""></div>
+    <div><label for="awayTeam">Away team</label><input id="awayTeam" placeholder="Enter away team" value=""></div>
   </section>
-  <p class="grid-help">Enter the two home pairs down the left and the two away pairs across the top. At each intersection, enter the home and away score for each of the two sets. On a phone, swipe the grid horizontally if needed.</p>
-  <div class="table-wrap" role="region" aria-label="Match score grid; swipe horizontally on small screens" tabindex="0">
+  <p class="grid-help">Enter the player names and scores below. On a phone, swipe the score grid sideways to see all columns.</p>
+  <div class="table-wrap" role="region" aria-label="Match score grid; swipe sideways on phones" tabindex="0">
     <table id="scoreTable">
-      <thead id="scoreHead"></thead>
-      <tbody id="rows"></tbody>
+      <thead id="scoreHead"><tr><th class="home-heading">Home team — pairs</th><th class="away-heading">Away pair 1<br><div class="pair-inputs">
+    <input data-field="awayPlayer1_1" aria-label="Away pair 1 player 1" placeholder="Player 1" value="">
+    <input data-field="awayPlayer2_1" aria-label="Away pair 1 player 2" placeholder="Player 2" value="">
+  </div><small>Set 1 and Set 2 scores (Home–Away)</small></th><th class="away-heading">Away pair 2<br><div class="pair-inputs">
+    <input data-field="awayPlayer1_2" aria-label="Away pair 2 player 1" placeholder="Player 1" value="">
+    <input data-field="awayPlayer2_2" aria-label="Away pair 2 player 2" placeholder="Player 2" value="">
+  </div><small>Set 1 and Set 2 scores (Home–Away)</small></th></tr></thead>
+      <tbody id="rows"><tr><th class="home-heading" scope="row">Home pair 1<div class="pair-inputs">
+    <input data-field="homePlayer1_1" aria-label="Home pair 1 player 1" placeholder="Player 1" value="">
+    <input data-field="homePlayer2_1" aria-label="Home pair 1 player 2" placeholder="Player 2" value="">
+  </div></th>
+    <td class="score-cell">
+      <div class="set-score">
+        <div class="set-entry"><label for="score_h1_a1_s1_home">Set 1</label><input id="score_h1_a1_s1_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="1" data-side="home" aria-label="Home pair 1 versus away pair 1, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="1" data-side="away" aria-label="Home pair 1 versus away pair 1, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h1_a1_s2_home">Set 2</label><input id="score_h1_a1_s2_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="2" data-side="home" aria-label="Home pair 1 versus away pair 1, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="2" data-side="away" aria-label="Home pair 1 versus away pair 1, set 2, away score" placeholder="A" value=""></div>
+      </div>
+    </td>
+    <td class="score-cell">
+      <div class="set-score">
+        <div class="set-entry"><label for="score_h1_a2_s1_home">Set 1</label><input id="score_h1_a2_s1_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="1" data-side="home" aria-label="Home pair 1 versus away pair 2, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="1" data-side="away" aria-label="Home pair 1 versus away pair 2, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h1_a2_s2_home">Set 2</label><input id="score_h1_a2_s2_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="2" data-side="home" aria-label="Home pair 1 versus away pair 2, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="2" data-side="away" aria-label="Home pair 1 versus away pair 2, set 2, away score" placeholder="A" value=""></div>
+      </div>
+    </td></tr><tr><th class="home-heading" scope="row">Home pair 2<div class="pair-inputs">
+    <input data-field="homePlayer1_2" aria-label="Home pair 2 player 1" placeholder="Player 1" value="">
+    <input data-field="homePlayer2_2" aria-label="Home pair 2 player 2" placeholder="Player 2" value="">
+  </div></th>
+    <td class="score-cell">
+      <div class="set-score">
+        <div class="set-entry"><label for="score_h2_a1_s1_home">Set 1</label><input id="score_h2_a1_s1_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="1" data-side="home" aria-label="Home pair 2 versus away pair 1, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="1" data-side="away" aria-label="Home pair 2 versus away pair 1, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h2_a1_s2_home">Set 2</label><input id="score_h2_a1_s2_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="2" data-side="home" aria-label="Home pair 2 versus away pair 1, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="2" data-side="away" aria-label="Home pair 2 versus away pair 1, set 2, away score" placeholder="A" value=""></div>
+      </div>
+    </td>
+    <td class="score-cell">
+      <div class="set-score">
+        <div class="set-entry"><label for="score_h2_a2_s1_home">Set 1</label><input id="score_h2_a2_s1_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="1" data-side="home" aria-label="Home pair 2 versus away pair 2, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="1" data-side="away" aria-label="Home pair 2 versus away pair 2, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h2_a2_s2_home">Set 2</label><input id="score_h2_a2_s2_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="2" data-side="home" aria-label="Home pair 2 versus away pair 2, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="2" data-side="away" aria-label="Home pair 2 versus away pair 2, set 2, away score" placeholder="A" value=""></div>
+      </div>
+    </td></tr></tbody>
     </table>
   </div>
   <div class="summary">
     <table class="totals">
-      <tr><th>Totals</th><th>Home team</th><th>Away team</th></tr>
+      <tbody><tr><th>Totals</th><th>Home team</th><th>Away team</th></tr>
       <tr><td>Sets won</td><td class="number" id="homeSets">0</td><td class="number" id="awaySets">0</td></tr>
-      <tr><td>Matches won</td><td class="number" id="homeMatches">0</td><td class="number" id="awayMatches">0</td></tr>
-    </table>
+    </tbody></table>
   </div>
   <div class="reason">
     <label for="reason">Reason for claiming the match (if applicable)</label>
     <textarea id="reason" placeholder="Enter reason, or leave blank"></textarea>
   </div>
   <section class="signatures">
-    <div><label for="claimedBy">Won / claimed by</label><input id="claimedBy" placeholder="Name / team"></div>
-    <div><label for="cardSent">Card sent in by</label><input id="cardSent" placeholder="Name"></div>
-    <div><label for="homeCaptain">Home captain</label><input id="homeCaptain" placeholder="Name"></div>
-    <div><label for="awayCaptain">Away captain</label><input id="awayCaptain" placeholder="Name"></div>
+    <div><label for="claimedBy">Won / claimed by</label><input id="claimedBy" placeholder="Name / team" value=""></div>
+    <div><label for="cardSent">Card sent in by</label><input id="cardSent" placeholder="Name" value=""></div>
+    <div><label for="homeCaptain">Home captain</label><input id="homeCaptain" placeholder="Name" value=""></div>
+    <div><label for="awayCaptain">Away captain</label><input id="awayCaptain" placeholder="Name" value=""></div>
   </section>
   <div class="footer">
-    <div><strong>Send to:</strong> stockleagueesec@gmail.com<br><strong>BOTH Teams MUST return score sheet</strong><div id="saveStatus" class="save-status" role="status">Autosave ready</div></div>
+    <div><strong>Send to:</strong> stockleagueesec@gmail.com<br><strong>BOTH Teams MUST return score sheet</strong><div id="saveStatus" class="save-status" role="status">Downloaded copy</div></div>
     <div class="buttons">
       <button type="button" onclick="window.print()">Print / Save as PDF</button>
       <button type="button" class="secondary" onclick="downloadSheet()">Download completed sheet</button>
@@ -156,26 +212,21 @@ for (const homePair of pairNames) {
 }
 
 function calculate() {
-  let homeSets = 0, awaySets = 0, homeMatches = 0, awayMatches = 0;
+  let homeSets = 0, awaySets = 0;
   for (const homePair of pairNames) {
     for (const awayPair of pairNames) {
-      let h = 0, a = 0;
       for (const set of [1,2]) {
         const hi = document.querySelector(`[data-home-pair="${homePair}"][data-away-pair="${awayPair}"][data-set="${set}"][data-side="home"]`);
         const ai = document.querySelector(`[data-home-pair="${homePair}"][data-away-pair="${awayPair}"][data-set="${set}"][data-side="away"]`);
         if (hi.value === '' || ai.value === '') continue;
         const hv = Number(hi.value), av = Number(ai.value);
-        if (hv > av) { homeSets++; h++; }
-        else if (av > hv) { awaySets++; a++; }
+        if (hv > av) homeSets++;
+        else if (av > hv) awaySets++;
       }
-      if (h > a) homeMatches++;
-      else if (a > h) awayMatches++;
     }
   }
   document.getElementById('homeSets').textContent = homeSets;
   document.getElementById('awaySets').textContent = awaySets;
-  document.getElementById('homeMatches').textContent = homeMatches;
-  document.getElementById('awayMatches').textContent = awayMatches;
 }
 
 function saveForm() {
@@ -244,5 +295,6 @@ if (!document.getElementById('matchDate').value) {
 }
 calculate();
 </script>
-</body>
-</html>
+
+
+</body></html>
