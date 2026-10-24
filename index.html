@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock Winter Floodlit League — Match Score Sheet</title>
+<style>
+  :root { --ink:#1f2937; --line:#9ca3af; --blue:#164e63; --paper:#fff; --soft:#f1f5f9; --muted:#64748b; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:#e9edf1; color:var(--ink); font:15px/1.4 Arial,Helvetica,sans-serif; }
+  .sheet { max-width:1500px; margin:auto; padding:30px; background:var(--paper); box-shadow:0 4px 22px #0001; border-radius:10px; }
+  header { text-align:center; margin-bottom:24px; }
+  h1 { font-size:22px; margin:0 0 4px; letter-spacing:.04em; }
+  .season { font-weight:700; color:#475569; }
+  .season input { display:inline-block; width:105px; padding:3px 5px; text-align:center; }
+  .details { display:grid; grid-template-columns:1fr 1fr; gap:14px 28px; margin:20px 0 22px; }
+  label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#475569; margin-bottom:5px; }
+  input, select, textarea { width:100%; min-width:0; border:1px solid #cbd5e1; border-radius:6px; padding:9px; font:inherit; background:#fff; color:var(--ink); }
+  input:focus, select:focus, textarea:focus { outline:2px solid #67a9c5; border-color:#0e7490; }
+  .grid-help { margin:0 0 9px; color:var(--muted); font-size:13px; }
+  .table-wrap { width:100%; overflow-x:auto; border:1px solid var(--line); border-radius:6px; }
+  #scoreTable { width:100%; min-width:1120px; border-collapse:collapse; table-layout:fixed; }
+  #scoreTable th, #scoreTable td { border:1px solid var(--line); padding:7px; text-align:center; }
+  #scoreTable th { background:#eaf1f5; font-size:12px; }
+  #scoreTable th.home-heading { width:220px; min-width:220px; }
+  #scoreTable th.away-heading { min-width:210px; }
+  .pair-inputs { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+  .pair-inputs input { min-width:85px; font-size:12px; }
+  .score-cell { min-width:210px; }
+  .set-score { display:grid; grid-template-columns:repeat(2,minmax(76px,1fr)); gap:6px; }
+  .set-entry { display:grid; grid-template-columns:1fr 1fr; gap:3px; align-items:center; }
+  .set-entry label { grid-column:1 / -1; margin:0; font-size:10px; letter-spacing:0; text-align:center; }
+  .set-entry input { padding:7px 3px; text-align:center; font-weight:700; }
+  .summary { display:flex; justify-content:flex-end; margin:14px 0 24px; }
+  .totals { border-collapse:collapse; min-width:310px; width:auto; }
+  .totals th, .totals td { border:1px solid var(--line); padding:10px 16px; text-align:center; }
+  .totals th { background:#eaf1f5; font-size:12px; }
+  .totals .number { font-size:22px; font-weight:700; }
+  .reason { margin:20px 0; }
+  textarea { min-height:62px; resize:vertical; }
+  .signatures { display:grid; grid-template-columns:1fr 1fr; gap:22px 28px; margin-top:24px; }
+  .footer { margin-top:26px; border-top:1px solid #cbd5e1; padding-top:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  .buttons { display:flex; flex-wrap:wrap; gap:8px; }
+  button { border:0; border-radius:6px; padding:11px 15px; font-weight:700; cursor:pointer; background:var(--blue); color:white; }
+  button.secondary { background:#e2e8f0; color:#1e293b; }
+  .note { font-size:12px; color:var(--muted); margin-top:8px; }
+  .save-status { font-size:12px; color:var(--muted); margin-top:7px; }
+  .save-status::before { content:'●'; color:#15803d; margin-right:6px; }
+  @media (max-width:700px) {
+    body { padding:0; background:#fff; }
+    .sheet { padding:15px 12px; border-radius:0; box-shadow:none; }
+    h1 { font-size:18px; }
+    .details, .signatures { grid-template-columns:1fr; gap:12px; }
+    .details { margin:17px 0; }
+    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    #scoreTable { min-width:1120px; }
+    .grid-help { line-height:1.5; }
+    .summary { justify-content:stretch; }
+    .totals { min-width:0; width:100%; }
+    .totals th, .totals td { padding:8px 5px; }
+    .totals .number { font-size:19px; }
+    .footer { align-items:stretch; }
+    .footer > div:first-child { font-size:13px; }
+    .buttons { display:grid; grid-template-columns:1fr; width:100%; }
+    button { width:100%; }
+  }
+  @media print {
+    @page { size:landscape; margin:8mm; }
+    body { background:white; padding:0; }
+    .sheet { max-width:none; padding:0; box-shadow:none; border-radius:0; }
+    .buttons, .note, .save-status, .grid-help { display:none !important; }
+    input, textarea, select { border:0; border-bottom:1px solid #bbb; border-radius:0; padding:3px 1px; appearance:none; }
+    #scoreTable { min-width:0; width:100%; font-size:9px; }
+    #scoreTable th, #scoreTable td { padding:3px; }
+    #scoreTable th.home-heading { width:155px; min-width:0; }
+    #scoreTable th.away-heading { min-width:0; }
+    .pair-inputs input { min-width:0; font-size:8px; }
+    .score-cell { min-width:0; }
+    .set-score { gap:2px; }
+    .set-entry input { padding:2px 0; font-size:9px; }
+    .set-entry label { font-size:8px; }
+    th { background:#eee !important; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header>
+    <h1>STOCK WINTER FLOODLIT LEAGUE</h1>
+    <div class="season">Season <input id="season" value="2026-27" aria-label="Season"></div>
+  </header>
+  <section class="details">
+    <div><label for="division">Division</label><input id="division" value="Mens/Ladies/Mix"></div>
+    <div><label for="matchDate">Date</label><input id="matchDate" type="date"></div>
+    <div><label for="homeTeam">Home team</label><input id="homeTeam" placeholder="Enter home team"></div>
+    <div><label for="awayTeam">Away team</label><input id="awayTeam" placeholder="Enter away team"></div>
+  </section>
+  <p class="grid-help">Enter the two home pairs down the left and the two away pairs across the top. At each intersection, enter the home and away score for each of the two sets. On a phone, swipe the grid horizontally if needed.</p>
+  <div class="table-wrap" role="region" aria-label="Match score grid; swipe horizontally on small screens" tabindex="0">
+    <table id="scoreTable">
+      <thead id="scoreHead"></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="summary">
+    <table class="totals">
+      <tr><th>Totals</th><th>Home team</th><th>Away team</th></tr>
+      <tr><td>Sets won</td><td class="number" id="homeSets">0</td><td class="number" id="awaySets">0</td></tr>
+      <tr><td>Matches won</td><td class="number" id="homeMatches">0</td><td class="number" id="awayMatches">0</td></tr>
+    </table>
+  </div>
+  <div class="reason">
+    <label for="reason">Reason for claiming the match (if applicable)</label>
+    <textarea id="reason" placeholder="Enter reason, or leave blank"></textarea>
+  </div>
+  <section class="signatures">
+    <div><label for="claimedBy">Won / claimed by</label><input id="claimedBy" placeholder="Name / team"></div>
+    <div><label for="cardSent">Card sent in by</label><input id="cardSent" placeholder="Name"></div>
+    <div><label for="homeCaptain">Home captain</label><input id="homeCaptain" placeholder="Name"></div>
+    <div><label for="awayCaptain">Away captain</label><input id="awayCaptain" placeholder="Name"></div>
+  </section>
+  <div class="footer">
+    <div><strong>Send to:</strong> stockleagueesec@gmail.com<br><strong>BOTH Teams MUST return score sheet</strong><div id="saveStatus" class="save-status" role="status">Autosave ready</div></div>
+    <div class="buttons">
+      <button type="button" onclick="window.print()">Print / Save as PDF</button>
+      <button type="button" class="secondary" onclick="downloadSheet()">Download completed sheet</button>
+      <button type="button" class="secondary" onclick="clearScores()">Clear scores</button>
+    </div>
+  </div>
+  <p class="note">Scores and details are saved automatically in this browser on this device. Download a completed copy to keep it or send it to someone else. Totals update automatically. The grid has two home pairs and two away pairs. Each grid cell represents one pair-versus-pair match, with two sets per match.</p>
+</main>
+<script>
+const tbody = document.getElementById('rows');
+const STORAGE_KEY = 'stockWinterFloodlitScoreSheet_grid_v3';
+const pairNames = [1, 2];
+
+function pairInputs(side, pair) {
+  const sideLabel = side === 'home' ? 'Home' : 'Away';
+  return `<div class="pair-inputs">
+    <input data-field="${side}Player1_${pair}" aria-label="${sideLabel} pair ${pair} player 1" placeholder="Player 1">
+    <input data-field="${side}Player2_${pair}" aria-label="${sideLabel} pair ${pair} player 2" placeholder="Player 2">
+  </div>`;
+}
+
+document.getElementById('scoreHead').innerHTML = `<tr><th class="home-heading">Home team — pairs</th>${pairNames.map(pair => `<th class="away-heading">Away pair ${pair}<br>${pairInputs('away', pair)}<small>Set 1 and Set 2 scores (Home–Away)</small></th>`).join('')}</tr>`;
+
+for (const homePair of pairNames) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<th class="home-heading" scope="row">Home pair ${homePair}${pairInputs('home', homePair)}</th>` + pairNames.map(awayPair => `
+    <td class="score-cell">
+      <div class="set-score">
+        ${[1,2].map(set => `<div class="set-entry"><label for="score_h${homePair}_a${awayPair}_s${set}_home">Set ${set}</label><input id="score_h${homePair}_a${awayPair}_s${set}_home" type="number" min="0" max="99" step="1" data-home-pair="${homePair}" data-away-pair="${awayPair}" data-set="${set}" data-side="home" aria-label="Home pair ${homePair} versus away pair ${awayPair}, set ${set}, home score" placeholder="H"><input type="number" min="0" max="99" step="1" data-home-pair="${homePair}" data-away-pair="${awayPair}" data-set="${set}" data-side="away" aria-label="Home pair ${homePair} versus away pair ${awayPair}, set ${set}, away score" placeholder="A"></div>`).join('')}
+      </div>
+    </td>`).join('');
+  tbody.appendChild(tr);
+}
+
+function calculate() {
+  let homeSets = 0, awaySets = 0, homeMatches = 0, awayMatches = 0;
+  for (const homePair of pairNames) {
+    for (const awayPair of pairNames) {
+      let h = 0, a = 0;
+      for (const set of [1,2]) {
+        const hi = document.querySelector(`[data-home-pair="${homePair}"][data-away-pair="${awayPair}"][data-set="${set}"][data-side="home"]`);
+        const ai = document.querySelector(`[data-home-pair="${homePair}"][data-away-pair="${awayPair}"][data-set="${set}"][data-side="away"]`);
+        if (hi.value === '' || ai.value === '') continue;
+        const hv = Number(hi.value), av = Number(ai.value);
+        if (hv > av) { homeSets++; h++; }
+        else if (av > hv) { awaySets++; a++; }
+      }
+      if (h > a) homeMatches++;
+      else if (a > h) awayMatches++;
+    }
+  }
+  document.getElementById('homeSets').textContent = homeSets;
+  document.getElementById('awaySets').textContent = awaySets;
+  document.getElementById('homeMatches').textContent = homeMatches;
+  document.getElementById('awayMatches').textContent = awayMatches;
+}
+
+function saveForm() {
+  const data = {};
+  document.querySelectorAll('main.sheet input, main.sheet textarea, main.sheet select').forEach((el, i) => {
+    const key = el.id || el.dataset.field || el.getAttribute('aria-label') || `field_${i}`;
+    data[key] = el.value;
+  });
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    document.getElementById('saveStatus').textContent = 'Saved automatically';
+  } catch (err) {
+    document.getElementById('saveStatus').textContent = 'Autosave unavailable in this browser — download a copy to keep your work';
+  }
+}
+
+function restoreForm() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    document.querySelectorAll('main.sheet input, main.sheet textarea, main.sheet select').forEach((el, i) => {
+      const key = el.id || el.dataset.field || el.getAttribute('aria-label') || `field_${i}`;
+      if (Object.prototype.hasOwnProperty.call(saved, key)) el.value = saved[key];
+    });
+  } catch (err) { /* Start with a blank sheet if saved data cannot be read. */ }
+}
+
+function clearScores() {
+  if (!confirm('Clear all player names and scores? Team details and captain fields will be kept.')) return;
+  document.querySelectorAll('.score-cell input, .pair-inputs input').forEach(el => el.value = '');
+  calculate();
+  saveForm();
+}
+
+function downloadSheet() {
+  const clone = document.documentElement.cloneNode(true);
+  const originalFields = [...document.querySelectorAll('input, textarea, select')];
+  const clonedFields = [...clone.querySelectorAll('input, textarea, select')];
+  clonedFields.forEach((el, idx) => {
+    const original = originalFields[idx];
+    if (!original) return;
+    if (el.tagName === 'TEXTAREA') el.textContent = original.value;
+    else el.setAttribute('value', original.value);
+  });
+  const status = clone.querySelector('#saveStatus');
+  if (status) status.textContent = 'Downloaded copy';
+  const blob = new Blob(['<!doctype html>\n' + clone.outerHTML], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'tennis-match-score-sheet.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+document.addEventListener('input', event => {
+  if (event.target.matches('.score-cell input')) calculate();
+  if (event.target.matches('main.sheet input, main.sheet textarea, main.sheet select')) saveForm();
+});
+document.addEventListener('change', event => {
+  if (event.target.matches('main.sheet input, main.sheet textarea, main.sheet select')) saveForm();
+});
+restoreForm();
+if (!document.getElementById('matchDate').value) {
+  const today = new Date();
+  document.getElementById('matchDate').value = new Date(today.getTime() - today.getTimezoneOffset()*60000).toISOString().slice(0,10);
+}
+calculate();
+</script>
+</body>
+</html>
