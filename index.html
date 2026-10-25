@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stock Winter Floodlit League — Match Score Sheet</title>
@@ -115,68 +116,36 @@
     <div class="season">Season <input id="season" value="2026-27" aria-label="Season"></div>
   </header>
   <section class="details">
-    <div><label for="division">Division</label><input id="division" value="Mens DIV 6"></div>
-    <div><label for="matchDate">Date</label><input id="matchDate" type="date" value="2026-10-24"></div>
-    <div><label for="homeTeam">Home team</label><input id="homeTeam" placeholder="Enter home team" value=""></div>
-    <div><label for="awayTeam">Away team</label><input id="awayTeam" placeholder="Enter away team" value=""></div>
+    <div><label for="division">Division</label><input id="division" value="Mens/Ladies/Mix"></div>
+    <div><label for="matchDate">Date</label><input id="matchDate" type="date"></div>
+    <div><label for="homeTeam">Home team</label><input id="homeTeam" placeholder="Enter home team"></div>
+    <div><label for="awayTeam">Away team</label><input id="awayTeam" placeholder="Enter away team"></div>
   </section>
   <p class="grid-help">Enter the player names and scores below. On a phone, swipe the score grid sideways to see all columns.</p>
   <div class="table-wrap" role="region" aria-label="Match score grid; swipe sideways on phones" tabindex="0">
     <table id="scoreTable">
-      <thead id="scoreHead"><tr><th class="home-heading">Home team — pairs</th><th class="away-heading">Away pair 1<br><div class="pair-inputs">
-    <input data-field="awayPlayer1_1" aria-label="Away pair 1 player 1" placeholder="Player 1" value="">
-    <input data-field="awayPlayer2_1" aria-label="Away pair 1 player 2" placeholder="Player 2" value="">
-  </div><small>Set 1 and Set 2 scores (Home–Away)</small></th><th class="away-heading">Away pair 2<br><div class="pair-inputs">
-    <input data-field="awayPlayer1_2" aria-label="Away pair 2 player 1" placeholder="Player 1" value="">
-    <input data-field="awayPlayer2_2" aria-label="Away pair 2 player 2" placeholder="Player 2" value="">
-  </div><small>Set 1 and Set 2 scores (Home–Away)</small></th></tr></thead>
-      <tbody id="rows"><tr><th class="home-heading" scope="row">Home pair 1<div class="pair-inputs">
-    <input data-field="homePlayer1_1" aria-label="Home pair 1 player 1" placeholder="Player 1" value="">
-    <input data-field="homePlayer2_1" aria-label="Home pair 1 player 2" placeholder="Player 2" value="">
-  </div></th>
-    <td class="score-cell">
-      <div class="set-score">
-        <div class="set-entry"><label for="score_h1_a1_s1_home">Set 1</label><input id="score_h1_a1_s1_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="1" data-side="home" aria-label="Home pair 1 versus away pair 1, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="1" data-side="away" aria-label="Home pair 1 versus away pair 1, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h1_a1_s2_home">Set 2</label><input id="score_h1_a1_s2_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="2" data-side="home" aria-label="Home pair 1 versus away pair 1, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="1" data-set="2" data-side="away" aria-label="Home pair 1 versus away pair 1, set 2, away score" placeholder="A" value=""></div>
-      </div>
-    </td>
-    <td class="score-cell">
-      <div class="set-score">
-        <div class="set-entry"><label for="score_h1_a2_s1_home">Set 1</label><input id="score_h1_a2_s1_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="1" data-side="home" aria-label="Home pair 1 versus away pair 2, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="1" data-side="away" aria-label="Home pair 1 versus away pair 2, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h1_a2_s2_home">Set 2</label><input id="score_h1_a2_s2_home" type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="2" data-side="home" aria-label="Home pair 1 versus away pair 2, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="1" data-away-pair="2" data-set="2" data-side="away" aria-label="Home pair 1 versus away pair 2, set 2, away score" placeholder="A" value=""></div>
-      </div>
-    </td></tr><tr><th class="home-heading" scope="row">Home pair 2<div class="pair-inputs">
-    <input data-field="homePlayer1_2" aria-label="Home pair 2 player 1" placeholder="Player 1" value="">
-    <input data-field="homePlayer2_2" aria-label="Home pair 2 player 2" placeholder="Player 2" value="">
-  </div></th>
-    <td class="score-cell">
-      <div class="set-score">
-        <div class="set-entry"><label for="score_h2_a1_s1_home">Set 1</label><input id="score_h2_a1_s1_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="1" data-side="home" aria-label="Home pair 2 versus away pair 1, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="1" data-side="away" aria-label="Home pair 2 versus away pair 1, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h2_a1_s2_home">Set 2</label><input id="score_h2_a1_s2_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="2" data-side="home" aria-label="Home pair 2 versus away pair 1, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="1" data-set="2" data-side="away" aria-label="Home pair 2 versus away pair 1, set 2, away score" placeholder="A" value=""></div>
-      </div>
-    </td>
-    <td class="score-cell">
-      <div class="set-score">
-        <div class="set-entry"><label for="score_h2_a2_s1_home">Set 1</label><input id="score_h2_a2_s1_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="1" data-side="home" aria-label="Home pair 2 versus away pair 2, set 1, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="1" data-side="away" aria-label="Home pair 2 versus away pair 2, set 1, away score" placeholder="A" value=""></div><div class="set-entry"><label for="score_h2_a2_s2_home">Set 2</label><input id="score_h2_a2_s2_home" type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="2" data-side="home" aria-label="Home pair 2 versus away pair 2, set 2, home score" placeholder="H" value=""><input type="number" min="0" max="99" step="1" data-home-pair="2" data-away-pair="2" data-set="2" data-side="away" aria-label="Home pair 2 versus away pair 2, set 2, away score" placeholder="A" value=""></div>
-      </div>
-    </td></tr></tbody>
+      <thead id="scoreHead"></thead>
+      <tbody id="rows"></tbody>
     </table>
   </div>
   <div class="summary">
     <table class="totals">
-      <tbody><tr><th>Totals</th><th>Home team</th><th>Away team</th></tr>
+      <tr><th>Totals</th><th>Home team</th><th>Away team</th></tr>
       <tr><td>Sets won</td><td class="number" id="homeSets">0</td><td class="number" id="awaySets">0</td></tr>
-    </tbody></table>
+    </table>
   </div>
   <div class="reason">
     <label for="reason">Reason for claiming the match (if applicable)</label>
     <textarea id="reason" placeholder="Enter reason, or leave blank"></textarea>
   </div>
   <section class="signatures">
-    <div><label for="claimedBy">Won / claimed by</label><input id="claimedBy" placeholder="Name / team" value=""></div>
-    <div><label for="cardSent">Card sent in by</label><input id="cardSent" placeholder="Name" value=""></div>
-    <div><label for="homeCaptain">Home captain</label><input id="homeCaptain" placeholder="Name" value=""></div>
-    <div><label for="awayCaptain">Away captain</label><input id="awayCaptain" placeholder="Name" value=""></div>
+    <div><label for="claimedBy">Won / claimed by</label><input id="claimedBy" placeholder="Name / team"></div>
+    <div><label for="cardSent">Card sent in by</label><input id="cardSent" placeholder="Name"></div>
+    <div><label for="homeCaptain">Home captain</label><input id="homeCaptain" placeholder="Name"></div>
+    <div><label for="awayCaptain">Away captain</label><input id="awayCaptain" placeholder="Name"></div>
   </section>
   <div class="footer">
-    <div><strong>Send to:</strong> stockleagueesec@gmail.com<br><strong>BOTH Teams MUST return score sheet</strong><div id="saveStatus" class="save-status" role="status">Downloaded copy</div></div>
+    <div><strong>Send to:</strong> stockleagueesec@gmail.com<br><strong>BOTH Teams MUST return score sheet</strong><div id="saveStatus" class="save-status" role="status">Autosave ready</div></div>
     <div class="buttons">
       <button type="button" onclick="window.print()">Print / Save as PDF</button>
       <button type="button" class="secondary" onclick="downloadSheet()">Download completed sheet</button>
@@ -295,6 +264,5 @@ if (!document.getElementById('matchDate').value) {
 }
 calculate();
 </script>
-
-
-</body></html>
+</body>
+</html>
