@@ -25,7 +25,7 @@
   #scoreTable th.home-heading { width:220px; min-width:220px; }
   #scoreTable th.away-heading { min-width:150px; }
   .pair-inputs { display:grid; grid-template-columns:1fr; gap:5px; }
-  .pair-inputs input { min-width:85px; font-size:12px; }
+  .pair-inputs input, .pair-inputs select { min-width:85px; font-size:12px; }
   .score-cell { min-width:145px; }
   .set-score { display:grid; grid-template-columns:1fr; gap:6px; }
   .set-entry { display:grid; grid-template-columns:1fr 1fr; gap:3px; align-items:center; }
@@ -63,10 +63,11 @@
     #scoreTable { min-width:0; width:100%; table-layout:fixed; }
     #scoreTable th, #scoreTable td { padding:7px; }
     #scoreTable th { font-size:12px; }
-    #scoreTable th.home-heading { width:120px; min-width:120px; }
+    #scoreTable th.home-heading { width:108px; min-width:108px; }
+    #scoreTable thead th.home-heading { white-space:nowrap; }
     #scoreTable th.away-heading { min-width:0; }
     .pair-inputs { grid-template-columns:1fr; gap:5px; }
-    .pair-inputs input { min-width:0; min-height:42px; padding:7px 5px; font-size:14px; }
+    .pair-inputs input, .pair-inputs select { min-width:0; min-height:42px; padding:7px 5px; font-size:14px; }
     .score-cell { min-width:0; }
     .set-score { grid-template-columns:1fr; gap:6px; }
     .set-entry { gap:5px; }
@@ -100,7 +101,7 @@
     #scoreTable th, #scoreTable td { padding:3px; }
     #scoreTable th.home-heading { width:155px; min-width:0; }
     #scoreTable th.away-heading { min-width:0; }
-    .pair-inputs input { min-width:0; font-size:8px; }
+    .pair-inputs input, .pair-inputs select { min-width:0; font-size:8px; }
     .score-cell { min-width:0; }
     .set-score { gap:2px; }
     .set-entry input { padding:2px 0; font-size:9px; }
@@ -118,10 +119,10 @@
   <section class="details">
     <div><label for="division">Division</label><input id="division" value="Mens/Ladies/Mix"></div>
     <div><label for="matchDate">Date</label><input id="matchDate" type="date"></div>
-    <div><label for="homeTeam">Home team</label><input id="homeTeam" placeholder="Enter home team"></div>
-    <div><label for="awayTeam">Away team</label><input id="awayTeam" placeholder="Enter away team"></div>
+    <div><label for="homeTeam">Home team</label><select id="homeTeam"><option value="">Loading teams…</option></select></div>
+    <div><label for="awayTeam">Away team</label><select id="awayTeam"><option value="">Loading teams…</option></select></div>
   </section>
-  <p class="grid-help">Enter the player names and scores below. On a phone, swipe the score grid sideways to see all columns.</p>
+  <p class="grid-help">Choose the home and away teams, then select players from each team’s list. On a phone, swipe the score grid sideways to see all columns.</p>
   <div class="table-wrap" role="region" aria-label="Match score grid; swipe sideways on phones" tabindex="0">
     <table id="scoreTable">
       <thead id="scoreHead"></thead>
@@ -158,16 +159,70 @@
 const tbody = document.getElementById('rows');
 const STORAGE_KEY = 'stockWinterFloodlitScoreSheet_grid_v3';
 const pairNames = [1, 2];
+let teamData = [];
 
-function pairInputs(side, pair) {
+function playerSelect(side, pair, player) {
   const sideLabel = side === 'home' ? 'Home' : 'Away';
-  return `<div class="pair-inputs">
-    <input data-field="${side}Player1_${pair}" aria-label="${sideLabel} pair ${pair} player 1" placeholder="Player 1">
-    <input data-field="${side}Player2_${pair}" aria-label="${sideLabel} pair ${pair} player 2" placeholder="Player 2">
-  </div>`;
+  return `<select data-field="${side}Player${player}_${pair}" data-player-side="${side}" aria-label="${sideLabel} pair ${pair} player ${player}">
+    <option value="">Player ${player}</option>
+  </select>`;
 }
 
-document.getElementById('scoreHead').innerHTML = `<tr><th class="home-heading">Home team — pairs</th>${pairNames.map(pair => `<th class="away-heading">Away pair ${pair}<br>${pairInputs('away', pair)}<small>Set 1 and Set 2 scores (Home–Away)</small></th>`).join('')}</tr>`;
+function pairInputs(side, pair) {
+  return `<div class="pair-inputs">${playerSelect(side, pair, 1)}${playerSelect(side, pair, 2)}</div>`;
+}
+
+function fillTeamSelect(select, selectedValue = '') {
+  select.innerHTML = '<option value="">Select team</option>' + teamData.map(team =>
+    `<option value="${escapeHtml(team.name)}">${escapeHtml(team.name)}</option>`
+  ).join('');
+  if (teamData.some(team => team.name === selectedValue)) select.value = selectedValue;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+
+function updatePlayerDropdowns(side, preserve = true) {
+  const teamName = document.getElementById(side + 'Team').value;
+  const team = teamData.find(item => item.name === teamName);
+  document.querySelectorAll(`select[data-player-side="${side}"]`).forEach(select => {
+    const previous = preserve ? select.value : '';
+    const placeholder = select.getAttribute('aria-label').toLowerCase().includes('player 1') ? 'Player 1' : 'Player 2';
+    const players = team && Array.isArray(team.players) ? team.players : [];
+    select.innerHTML = `<option value="">${placeholder}</option>` + players.map(player =>
+      `<option value="${escapeHtml(player)}">${escapeHtml(player)}</option>`
+    ).join('');
+    if (players.includes(previous)) select.value = previous;
+  });
+}
+
+async function loadTeams() {
+  const status = document.getElementById('saveStatus');
+  try {
+    const response = await fetch('players.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    if (!data || !Array.isArray(data.teams)) throw new Error('players.json must contain a teams array');
+    teamData = data.teams.filter(team => team && typeof team.name === 'string' && Array.isArray(team.players));
+    fillTeamSelect(document.getElementById('homeTeam'));
+    fillTeamSelect(document.getElementById('awayTeam'));
+    restoreForm();
+    updatePlayerDropdowns('home');
+    updatePlayerDropdowns('away');
+    // Restore player choices after the relevant team options have been created.
+    restoreForm();
+    status.textContent = `Loaded ${teamData.length} teams from players.json`;
+  } catch (error) {
+    document.getElementById('homeTeam').innerHTML = '<option value="">Teams unavailable</option>';
+    document.getElementById('awayTeam').innerHTML = '<option value="">Teams unavailable</option>';
+    status.textContent = 'Could not load players.json — check it is beside index.html and served by the web server';
+    console.error('Unable to load players.json:', error);
+  }
+}
+
+
+document.getElementById('scoreHead').innerHTML = `<tr><th class="home-heading">Home pairs</th>${pairNames.map(pair => `<th class="away-heading">Away pair ${pair}<br>${pairInputs('away', pair)}<small>Set 1 and Set 2 scores (Home–Away)</small></th>`).join('')}</tr>`;
 
 for (const homePair of pairNames) {
   const tr = document.createElement('tr');
@@ -224,7 +279,7 @@ function restoreForm() {
 
 function clearScores() {
   if (!confirm('Clear all player names and scores? Team details and captain fields will be kept.')) return;
-  document.querySelectorAll('.score-cell input, .pair-inputs input').forEach(el => el.value = '');
+  document.querySelectorAll('.score-cell input, .pair-inputs select').forEach(el => el.value = '');
   calculate();
   saveForm();
 }
@@ -237,7 +292,9 @@ function downloadSheet() {
     const original = originalFields[idx];
     if (!original) return;
     if (el.tagName === 'TEXTAREA') el.textContent = original.value;
-    else el.setAttribute('value', original.value);
+    else if (el.tagName === 'SELECT') {
+      [...el.options].forEach(option => option.toggleAttribute('selected', option.value === original.value));
+    } else el.setAttribute('value', original.value);
   });
   const status = clone.querySelector('#saveStatus');
   if (status) status.textContent = 'Downloaded copy';
@@ -255,14 +312,17 @@ document.addEventListener('input', event => {
   if (event.target.matches('main.sheet input, main.sheet textarea, main.sheet select')) saveForm();
 });
 document.addEventListener('change', event => {
+  if (event.target.id === 'homeTeam') updatePlayerDropdowns('home', false);
+  if (event.target.id === 'awayTeam') updatePlayerDropdowns('away', false);
   if (event.target.matches('main.sheet input, main.sheet textarea, main.sheet select')) saveForm();
 });
-restoreForm();
+
 if (!document.getElementById('matchDate').value) {
   const today = new Date();
   document.getElementById('matchDate').value = new Date(today.getTime() - today.getTimezoneOffset()*60000).toISOString().slice(0,10);
 }
 calculate();
+loadTeams();
 </script>
 </body>
 </html>
