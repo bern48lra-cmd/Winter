@@ -1,0 +1,22 @@
+{
+  "teams": [
+    {
+      "name": "Team A",
+      "players": [
+        "John Smith",
+        "Peter Jones",
+        "David Brown",
+        "Mike Wilson"
+      ]
+    },
+    {
+      "name": "Team B",
+      "players": [
+        "Steve Taylor",
+        "Alan White",
+        "Chris Green",
+        "Paul Harris"
+      ]
+    }
+  ]
+}
