@@ -163,9 +163,11 @@ let teamData = [];
 
 function playerSelect(side, pair, player) {
   const sideLabel = side === 'home' ? 'Home' : 'Away';
-  return `<select data-field="${side}Player${player}_${pair}" data-player-side="${side}" aria-label="${sideLabel} pair ${pair} player ${player}">
-    <option value="">Player ${player}</option>
-  </select>`;
+  const field = `${side}Player${player}_${pair}`;
+  return `<input type="text" data-field="${field}" data-player-side="${side}"
+    list="${side}Players_${pair}_${player}" aria-label="${sideLabel} pair ${pair} player ${player}"
+    placeholder="Player ${player}" autocomplete="off">
+    <datalist id="${side}Players_${pair}_${player}"></datalist>`;
 }
 
 function pairInputs(side, pair) {
@@ -186,14 +188,16 @@ function escapeHtml(value) {
 function updatePlayerDropdowns(side, preserve = true) {
   const teamName = document.getElementById(side + 'Team').value;
   const team = teamData.find(item => item.name === teamName);
-  document.querySelectorAll(`select[data-player-side="${side}"]`).forEach(select => {
-    const previous = preserve ? select.value : '';
-    const placeholder = select.getAttribute('aria-label').toLowerCase().includes('player 1') ? 'Player 1' : 'Player 2';
-    const players = team && Array.isArray(team.players) ? team.players : [];
-    select.innerHTML = `<option value="">${placeholder}</option>` + players.map(player =>
-      `<option value="${escapeHtml(player)}">${escapeHtml(player)}</option>`
-    ).join('');
-    if (players.includes(previous)) select.value = previous;
+  const players = team && Array.isArray(team.players) ? team.players : [];
+  document.querySelectorAll(`input[data-player-side="${side}"]`).forEach(input => {
+    // Suggestions come from the selected team, but any name can be typed.
+    const list = document.getElementById(input.getAttribute('list'));
+    if (list) {
+      list.innerHTML = players.map(player =>
+        `<option value="${escapeHtml(player)}"></option>`
+      ).join('');
+    }
+    if (!preserve) input.value = '';
   });
 }
 
@@ -279,7 +283,7 @@ function restoreForm() {
 
 function clearScores() {
   if (!confirm('Clear all player names and scores? Team details and captain fields will be kept.')) return;
-  document.querySelectorAll('.score-cell input, .pair-inputs select').forEach(el => el.value = '');
+  document.querySelectorAll('.score-cell input, .pair-inputs input').forEach(el => el.value = '');
   calculate();
   saveForm();
 }
